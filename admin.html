@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Журнал подвала · панель</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+  :root { --bg:#F4F4F1; --ink:#121212; --muted:#5C5C57; --soft:#6B6B66; --line:#CFCFC8; --hair:#ECECE7; --card:#FFF; --accent:#2B50E6; --c2:#C2410C; --c3:#1F7A5C; --c4:#7A4FD1; --c5:#8A6D00; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  .hidden { display: none !important; }
+  button { font: inherit; cursor: pointer; }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  /* вход */
+  .login { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .login form { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 14px; }
+  .login h1 { margin: 0 0 6px; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+  .field { height: 52px; border: 2px solid transparent; border-radius: 14px; background: var(--card); padding: 0 16px; font: inherit; font-size: 16px; width: 100%; outline: none; }
+  .field:focus { border-color: var(--accent); }
+  .btn-dark { height: 52px; border-radius: 14px; border: 0; background: var(--ink); color: #FFF; font-weight: 700; font-size: 16px; }
+  .remember { display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--muted); }
+  .remember input { width: 20px; height: 20px; accent-color: var(--ink); }
+  .err { color: #C0262D; font-weight: 600; font-size: 14px; min-height: 20px; }
+  /* панель */
+  .page { padding: 28px 24px 48px; }
+  .inner { max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+  .head { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); display: flex; align-items: center; justify-content: center; }
+  .logo span { width: 10px; height: 10px; border-radius: 5px; background: var(--accent); }
+  .brand h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .brand small { display: block; font-size: 13px; color: var(--soft); }
+  .tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .search { height: 44px; width: 240px; max-width: 100%; border: 0; border-radius: 22px; background: var(--card); padding: 0 18px; font: inherit; font-size: 14px; }
+  .pill-dark { height: 44px; padding: 0 18px; border-radius: 22px; border: 0; background: var(--ink); color: #FFF; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .pill-ghost { height: 44px; min-width: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .last { grid-column: span 2; min-width: 0; background: var(--ink); color: #FFF; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+  @media (max-width: 520px) { .last { grid-column: auto; } }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B5B5AE; }
+  .ago { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--accent); white-space: nowrap; }
+  .last-name { font-size: 28px; font-weight: 800; line-height: 1.1; overflow-wrap: anywhere; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 14px; background: #2A2A28; }
+  .kpi { background: var(--card); border-radius: 22px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
+  .kpi span:first-child { font-size: 13px; font-weight: 600; color: var(--soft); }
+  .kpi strong { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; }
+  .main { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+  .panel { background: var(--card); border-radius: 22px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+  .journal { flex: 999 1 560px; min-width: 0; }
+  .side { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+  .panel h2 { margin: 0; font-size: 18px; font-weight: 800; }
+  .side h2 { font-size: 16px; }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg { height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 13px; font-weight: 600; }
+  .seg[aria-pressed=true] { background: var(--ink); border-color: var(--ink); color: #FFF; }
+  select.seg { appearance: none; padding-right: 30px; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23121212' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-size: 12px; font-weight: 700; color: var(--soft); text-transform: uppercase; letter-spacing: .06em; padding: 0 12px 10px 0; border-bottom: 1px solid var(--hair); }
+  td { padding: 13px 12px 13px 0; border-bottom: 1px solid #F0F0EB; vertical-align: middle; }
+  td.t { font-weight: 700; white-space: nowrap; width: 150px; }
+  td.n { font-weight: 600; }
+  td.g { color: #4A4A46; }
+  .org { display: inline-flex; align-items: center; min-height: 26px; padding: 2px 10px; border-radius: 13px; font-size: 12px; font-weight: 700; color: #FFF; }
+  .empty { padding: 28px 0; text-align: center; color: var(--soft); font-size: 14px; }
+  .chart { display: flex; align-items: flex-end; gap: 10px; height: 150px; }
+  .col { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+  .col b { font-size: 12px; }
+  .col i { width: 100%; border-radius: 8px; background: #D9D9D2; min-height: 3px; display: block; }
+  .col i.today { background: var(--accent); }
+  .col span { font-size: 12px; color: var(--soft); }
+  .orow { display: flex; flex-direction: column; gap: 6px; }
+  .orow div:first-child { display: flex; justify-content: space-between; font-size: 14px; }
+  .track { height: 10px; border-radius: 5px; background: #F0F0EB; }
+  .track i { display: block; height: 10px; border-radius: 5px; }
+  .status { font-size: 13px; color: var(--soft); }
+  @media (max-width: 640px) {
+    .page { padding: 20px 16px 40px; }
+    .kpis { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .last { grid-column: 1 / -1; }
+    .kpi strong { font-size: 36px; }
+    .search { flex: 1 1 100%; width: auto; }
+    table { min-width: 0; }
+    thead { display: none; }
+    tbody tr { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 12px 0; border-bottom: 1px solid #F0F0EB; }
+    tbody td { padding: 0; border: 0; }
+    td.n { flex: 1 1 60%; order: 1; font-size: 15px; }
+    td.t { order: 2; width: auto; font-size: 13px; color: var(--soft); font-weight: 600; }
+    td:nth-child(3) { order: 3; }
+    td.g { order: 4; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="login" id="loginScreen">
+  <form id="loginForm">
+    <h1>Журнал подвала</h1>
+    <label for="pw" class="status">Пароль ответственного</label>
+    <input id="pw" class="field" type="password" autocomplete="current-password" required>
+    <label class="remember"><input type="checkbox" id="remember" checked> Запомнить на этом устройстве</label>
+    <button class="btn-dark" type="submit" id="loginBtn">Войти</button>
+    <div class="err" id="loginErr" role="alert"></div>
+  </form>
+</div>
+
+<div class="page hidden" id="dash">
+<div class="inner">
+  <div class="head">
+    <div class="brand">
+      <div class="logo"><span></span></div>
+      <div><h1>Журнал подвала</h1><small id="updated">Школа 547</small></div>
+    </div>
+    <div class="tools">
+      <label for="q" class="hidden">Поиск по ФИО</label>
+      <input id="q" class="search" type="search" placeholder="Поиск по ФИО" aria-label="Поиск по ФИО">
+      <button class="pill-ghost" id="refresh" type="button" aria-label="Обновить">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+      </button>
+      <button class="pill-dark" id="export" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+        Выгрузить в Excel
+      </button>
+      <button class="pill-ghost" id="logout" type="button">Выйти</button>
+    </div>
+  </div>
+
+  <div class="kpis">
+    <div class="last">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <span class="eyebrow">Последний вход</span><span class="ago" id="lastAgo"></span>
+      </div>
+      <div class="last-name" id="lastName">—</div>
+      <div class="tags" id="lastTags"></div>
+    </div>
+    <div class="kpi"><span>Заходов сегодня</span><strong id="kToday">0</strong></div>
+    <div class="kpi"><span>За 7 дней</span><strong id="kWeek">0</strong></div>
+  </div>
+
+  <div class="main">
+    <section class="panel journal">
+      <div class="bar">
+        <h2>Посещения</h2>
+        <div class="filters">
+          <button type="button" class="seg" data-period="today">Сегодня</button>
+          <button type="button" class="seg" data-period="week" aria-pressed="true">Неделя</button>
+          <button type="button" class="seg" data-period="month">Месяц</button>
+          <button type="button" class="seg" data-period="all">Всё</button>
+          <select class="seg" id="orgFilter" aria-label="Организация"><option value="">Все организации</option></select>
+        </div>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Время</th><th>ФИО</th><th>Организация</th><th>Цель</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+        <div class="empty hidden" id="empty">За выбранный период отметок нет</div>
+      </div>
+      <div class="status" id="count"></div>
+    </section>
+
+    <div class="side">
+      <section class="panel">
+        <h2>Заходы за 7 дней</h2>
+        <div class="chart" id="chart" role="img"></div>
+      </section>
+      <section class="panel">
+        <h2>Кто ходит чаще</h2>
+        <div id="orgStats" style="display:flex;flex-direction:column;gap:14px"></div>
+      </section>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var TZ = "Europe/Moscow";
+  var COLORS = ["var(--accent)", "var(--c2)", "var(--c3)", "var(--c4)", "var(--c5)"];
+  var KNOWN = ["Школа 547", "А101", "КТО"];
+  var visits = [], password = "", period = "week", timer = null;
+
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+  var dayKey = function (d) { return d.toLocaleDateString("en-CA", { timeZone: TZ }); };
+  var fmtTime = function (d) { return d.toLocaleTimeString("ru-RU", { timeZone: TZ, hour: "2-digit", minute: "2-digit" }); };
+  var fmtDate = function (d) { return d.toLocaleDateString("ru-RU", { timeZone: TZ, day: "numeric", month: "short" }); };
+  function when(d) {
+    var today = dayKey(new Date()), y = dayKey(new Date(Date.now() - 864e5)), k = dayKey(d);
+    return (k === today ? "Сегодня" : k === y ? "Вчера" : fmtDate(d)) + " " + fmtTime(d);
+  }
+  function ago(d) {
+    var m = Math.floor((Date.now() - d.getTime()) / 60000);
+    if (m < 1) return "только что"; if (m < 60) return m + " мин назад";
+    var h = Math.floor(m / 60); if (h < 24) return h + " ч назад";
+    return Math.floor(h / 24) + " дн назад";
+  }
+  function orgColor(org) {
+    var i = KNOWN.indexOf(org);
+    if (i < 0) { var s = 0; for (var j = 0; j < org.length; j++) s = (s + org.charCodeAt(j)) % 2; i = 3 + s; }
+    return COLORS[i];
+  }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
+
+  function load() {
+    return fetch(window.PODVAL_API + "?action=list", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=UTF-8" },
+      body: JSON.stringify({ password: password, days: 400 })
+    }).then(function (r) {
+      return r.json().then(function (d) {
+        if (r.status === 401) { var e = new Error("Неверный пароль"); e.auth = true; throw e; }
+        if (!r.ok || !d.ok) throw new Error(d.error || "Ошибка загрузки");
+        visits = d.visits.map(function (v) { v.date = new Date(v.ts); return v; });
+        $("updated").textContent = "Школа 547 · обновлено в " + fmtTime(new Date());
+        render();
+      });
+    });
+  }
+
+  function inPeriod(v) {
+    var now = Date.now(), t = v.date.getTime();
+    if (period === "today") return dayKey(v.date) === dayKey(new Date());
+    if (period === "week") return now - t < 7 * 864e5;
+    if (period === "month") return now - t < 31 * 864e5;
+    return true;
+  }
+  function filtered() {
+    var q = $("q").value.trim().toLowerCase(), org = $("orgFilter").value;
+    return visits.filter(function (v) { return inPeriod(v) && (!org || v.org === org) && (!q || v.name.toLowerCase().indexOf(q) >= 0); });
+  }
+
+  function render() {
+    // последний вход
+    var last = visits[0];
+    $("lastName").textContent = last ? last.name : "Пока никого";
+    $("lastAgo").textContent = last ? ago(last.date) : "";
+    $("lastAgo").classList.toggle("hidden", !last);
+    var tags = $("lastTags"); tags.textContent = "";
+    if (last) [last.org, last.goal, when(last.date)].forEach(function (t) { tags.appendChild(el("span", "tag", t)); });
+    // цифры
+    var today = dayKey(new Date());
+    $("kToday").textContent = visits.filter(function (v) { return dayKey(v.date) === today; }).length;
+    $("kWeek").textContent = visits.filter(function (v) { return Date.now() - v.date.getTime() < 7 * 864e5; }).length;
+    // фильтр организаций
+    var sel = $("orgFilter"), cur = sel.value, orgs = {};
+    visits.forEach(function (v) { orgs[v.org] = 1; });
+    sel.textContent = ""; sel.appendChild(new Option("Все организации", ""));
+    Object.keys(orgs).sort().forEach(function (o) { sel.appendChild(new Option(o, o)); });
+    sel.value = orgs[cur] ? cur : "";
+    // таблица
+    var list = filtered(), body = $("rows"); body.textContent = "";
+    list.slice(0, 500).forEach(function (v) {
+      var tr = el("tr");
+      tr.appendChild(el("td", "t", when(v.date)));
+      tr.appendChild(el("td", "n", v.name));
+      var td = el("td"), b = el("span", "org", v.org); b.style.background = orgColor(v.org); td.appendChild(b); tr.appendChild(td);
+      tr.appendChild(el("td", "g", v.goal));
+      body.appendChild(tr);
+    });
+    $("empty").classList.toggle("hidden", list.length > 0);
+    $("count").textContent = list.length ? "Показано: " + Math.min(list.length, 500) + " из " + list.length : "";
+    // график 7 дней
+    var days = [], labels = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    for (var i = 6; i >= 0; i--) { var d = new Date(Date.now() - i * 864e5); var key = dayKey(d); days.push({ key: key, label: labels[new Date(key + "T12:00:00").getDay()], n: 0 }); }
+    visits.forEach(function (v) { var k = dayKey(v.date); days.forEach(function (x) { if (x.key === k) x.n++; }); });
+    var max = Math.max.apply(null, days.map(function (x) { return x.n; }).concat([1]));
+    var chart = $("chart"); chart.textContent = "";
+    chart.setAttribute("aria-label", "Заходы по дням: " + days.map(function (x) { return x.label + " " + x.n; }).join(", "));
+    days.forEach(function (x, idx) {
+      var c = el("div", "col"); c.appendChild(el("b", null, String(x.n)));
+      var bar = el("i", idx === 6 ? "today" : ""); bar.style.height = Math.round(x.n / max * 100) + "px"; c.appendChild(bar);
+      c.appendChild(el("span", null, x.label)); chart.appendChild(c);
+    });
+    // организации за выбранный период
+    var counts = {}; visits.filter(inPeriod).forEach(function (v) { counts[v.org] = (counts[v.org] || 0) + 1; });
+    var top = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; });
+    var omax = top.length ? counts[top[0]] : 1, box = $("orgStats"); box.textContent = "";
+    if (!top.length) box.appendChild(el("div", "status", "Нет данных за период"));
+    top.slice(0, 6).forEach(function (o) {
+      var r = el("div", "orow"), h = el("div");
+      h.appendChild(el("span", null, o)); var n = el("strong", null, String(counts[o])); h.appendChild(n); r.appendChild(h);
+      var t = el("div", "track"), f = el("i"); f.style.width = Math.round(counts[o] / omax * 100) + "%"; f.style.background = orgColor(o); t.appendChild(f); r.appendChild(t);
+      box.appendChild(r);
+    });
+  }
+
+  function exportCsv() {
+    var list = filtered();
+    var esc = function (s) { s = String(s); return /[";\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+    var lines = ["Дата;Время;ФИО;Организация;Цель"];
+    list.forEach(function (v) {
+      lines.push([v.date.toLocaleDateString("ru-RU", { timeZone: TZ }), fmtTime(v.date), v.name, v.org, v.goal].map(esc).join(";"));
+    });
+    var blob = new Blob(["﻿" + lines.join("\r\n")], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "журнал-подвала-" + dayKey(new Date()) + ".csv"; document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+
+  function enter() {
+    $("loginScreen").classList.add("hidden"); $("dash").classList.remove("hidden");
+    clearInterval(timer); timer = setInterval(function () { load().catch(function () {}); }, 60000);
+  }
+  function leave(msg) {
+    clearInterval(timer); password = ""; store("podval_admin", null);
+    $("dash").classList.add("hidden"); $("loginScreen").classList.remove("hidden");
+    $("loginErr").textContent = msg || ""; $("pw").value = ""; $("pw").focus();
+  }
+
+  $("loginForm").addEventListener("submit", function (e) {
+    e.preventDefault(); password = $("pw").value; $("loginErr").textContent = ""; $("loginBtn").disabled = true;
+    load().then(function () { if ($("remember").checked) store("podval_admin", password); enter(); })
+      .catch(function (err) { password = ""; $("loginErr").textContent = err.auth ? "Неверный пароль" : (err.message === "Failed to fetch" ? "Нет связи с сервером" : err.message); })
+      .then(function () { $("loginBtn").disabled = false; });
+  });
+  $("logout").addEventListener("click", function () { leave(""); });
+  $("refresh").addEventListener("click", function () { load().catch(function (err) { if (err.auth) leave("Пароль изменился, войдите снова"); }); });
+  $("export").addEventListener("click", exportCsv);
+  $("q").addEventListener("input", render);
+  $("orgFilter").addEventListener("change", render);
+  Array.prototype.forEach.call(document.querySelectorAll("[data-period]"), function (b) {
+    b.addEventListener("click", function () {
+      period = b.getAttribute("data-period");
+      Array.prototype.forEach.call(document.querySelectorAll("[data-period]"), function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      render();
+    });
+  });
+
+  var saved = store("podval_admin");
+  if (saved) { password = saved; load().then(enter).catch(function (err) { leave(err.auth ? "Войдите снова" : ""); }); }
+  else $("pw").focus();
+})();
+</script>
+</body>
+</html>

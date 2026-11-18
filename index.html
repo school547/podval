@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4F4F1">
+<meta name="robots" content="noindex">
+<title>Вход в подвал · Школа 547</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<script src="config.js"></script>
+<style>
+  :root { --bg:#F4F4F1; --ink:#121212; --muted:#5C5C57; --soft:#6B6B66; --line:#CFCFC8; --card:#FFFFFF; --accent:#2B50E6; --err:#C0262D; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 480px; margin: 0 auto; min-height: 100dvh; padding: calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 22px; }
+  .top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .place { display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 4px; background: var(--accent); }
+  h1 { margin: 0; font-size: 34px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
+  .group { display: flex; flex-direction: column; gap: 8px; border: 0; padding: 0; margin: 0; min-width: 0; }
+  .label { font-size: 13px; font-weight: 600; color: var(--muted); padding: 0; }
+  .hint { font-size: 12px; color: var(--soft); }
+  input[type=text] { height: 52px; border: 2px solid transparent; border-radius: 14px; background: var(--card); padding: 0 16px; font: inherit; font-size: 16px; font-weight: 600; color: var(--ink); width: 100%; outline: none; }
+  input[type=text]:focus { border-color: var(--accent); }
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .tile { height: 64px; border-radius: 14px; border: 0; background: var(--card); color: var(--ink); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; padding: 0 6px; transition: background .15s, color .15s, transform .1s; }
+  .tile[aria-pressed=true] { background: var(--accent); color: #FFF; }
+  .other { height: 44px; border-radius: 14px; background: transparent; color: var(--muted); border: 1px dashed var(--line); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .other[aria-pressed=true] { background: var(--accent); color: #FFF; border: 1px solid var(--accent); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { min-height: 44px; padding: 0 16px; border-radius: 22px; background: transparent; color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; }
+  .chip[aria-pressed=true] { background: var(--ink); color: #FFF; border-color: var(--ink); }
+  button:active { transform: scale(0.98); }
+  button:focus-visible, .go:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .hidden { display: none !important; }
+  .spacer { flex-grow: 1; }
+  .go { height: 58px; border-radius: 16px; background: var(--ink); color: #FFF; border: 0; font: inherit; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; width: 100%; }
+  .go[disabled] { opacity: .55; cursor: default; }
+  .legal { font-size: 11px; color: var(--soft); text-align: center; line-height: 1.4; margin: 0; }
+  .error { background: #FDECEC; color: var(--err); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-weight: 600; }
+  .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  /* экран «Вы отмечены» */
+  .done-main { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+  .check { width: 88px; height: 88px; border-radius: 44px; background: var(--accent); display: flex; align-items: center; justify-content: center; animation: pop .45s cubic-bezier(.2,1.4,.4,1); }
+  @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .done-title { margin: 0; font-size: 38px; }
+  .sub { margin: 6px 0 0; font-size: 16px; color: var(--muted); }
+  .card { background: var(--card); border-radius: 20px; padding: 6px 20px; }
+  .row { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid #ECECE7; font-size: 15px; }
+  .row:last-child { border-bottom: 0; }
+  .row span:first-child { color: var(--soft); flex-shrink: 0; }
+  .row span:last-child { font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+  .again { height: 52px; border-radius: 16px; border: 1px solid var(--line); background: transparent; font: inherit; font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; width: 100%; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<main class="wrap" id="formScreen">
+  <div class="top">
+    <div class="place"><span class="dot"></span>Подвал · Школа 547</div>
+    <div id="clock" aria-hidden="true"></div>
+  </div>
+  <h1>Отметьтесь<br>перед входом</h1>
+
+  <form id="form" novalidate style="display:contents">
+    <div class="group">
+      <label class="label" for="name">ФИО</label>
+      <input type="text" id="name" name="name" autocomplete="name" maxlength="120" placeholder="Иванов Иван Иванович" required>
+      <div class="hint">Телефон запомнит вас — в следующий раз вводить не нужно</div>
+    </div>
+
+    <fieldset class="group">
+      <legend class="label" style="margin-bottom:8px">Организация</legend>
+      <div class="tiles" id="orgTiles"></div>
+      <button type="button" class="other" id="orgOtherBtn" aria-pressed="false">+ Другая организация</button>
+      <input type="text" id="orgOther" class="hidden" maxlength="120" placeholder="Название организации" aria-label="Название организации">
+    </fieldset>
+
+    <fieldset class="group">
+      <legend class="label" style="margin-bottom:8px">Цель</legend>
+      <div class="chips" id="goalChips"></div>
+      <input type="text" id="goalOther" class="hidden" maxlength="120" placeholder="Что будете делать?" aria-label="Цель посещения">
+    </fieldset>
+
+    <div class="trap" aria-hidden="true"><label>Сайт <input type="text" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+    <div id="error" class="error hidden" role="alert"></div>
+    <div class="spacer"></div>
+    <button type="submit" class="go" id="submit">
+      Я захожу
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+    <p class="legal">Нажимая кнопку, вы соглашаетесь на обработку персональных данных (ФИО) для ведения журнала посещения подвала.</p>
+  </form>
+</main>
+
+<main class="wrap hidden" id="doneScreen">
+  <div class="top"><div class="place"><span class="dot"></span>Подвал · Школа 547</div></div>
+  <div class="done-main">
+    <div class="check"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <div>
+      <h1 class="done-title" tabindex="-1" id="doneTitle">Вы отмечены</h1>
+      <p class="sub">Вход записан в журнал. Хорошей работы!</p>
+    </div>
+    <div class="card">
+      <div class="row"><span>Кто</span><span id="dName"></span></div>
+      <div class="row"><span>Организация</span><span id="dOrg"></span></div>
+      <div class="row"><span>Цель</span><span id="dGoal"></span></div>
+      <div class="row"><span>Время</span><span id="dTime"></span></div>
+    </div>
+  </div>
+  <button type="button" class="again" id="again">Отметить другого человека</button>
+</main>
+
+<script>
+(function () {
+  var ORGS = ["Школа 547", "А101", "КТО"];
+  var GOALS = ["Осмотр", "Ремонт", "Снятие показаний счётчиков", "Хозяйственные работы", "Другое"];
+  var state = { org: "", goal: "" };
+  var $ = function (id) { return document.getElementById(id); };
+  var tz = { timeZone: "Europe/Moscow" };
+
+  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+
+  function tick() { $("clock").textContent = new Date().toLocaleTimeString("ru-RU", Object.assign({ hour: "2-digit", minute: "2-digit" }, tz)); }
+  tick(); setInterval(tick, 15000);
+
+  function makeButtons(list, holder, cls, onPick) {
+    list.forEach(function (label) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = cls; b.textContent = label; b.setAttribute("aria-pressed", "false");
+      b.addEventListener("click", function () { onPick(label); });
+      holder.appendChild(b);
+    });
+  }
+  function paint() {
+    Array.prototype.forEach.call($("orgTiles").children, function (b) { b.setAttribute("aria-pressed", String(b.textContent === state.org)); });
+    $("orgOtherBtn").setAttribute("aria-pressed", String(state.org === "__other"));
+    $("orgOther").classList.toggle("hidden", state.org !== "__other");
+    Array.prototype.forEach.call($("goalChips").children, function (b) { b.setAttribute("aria-pressed", String(b.textContent === state.goal)); });
+    $("goalOther").classList.toggle("hidden", state.goal !== "Другое");
+  }
+  makeButtons(ORGS, $("orgTiles"), "tile", function (v) { state.org = v; paint(); });
+  makeButtons(GOALS, $("goalChips"), "chip", function (v) { state.goal = v; paint(); if (v === "Другое") $("goalOther").focus(); });
+  $("orgOtherBtn").addEventListener("click", function () { state.org = "__other"; paint(); $("orgOther").focus(); });
+
+  // запомненные данные
+  $("name").value = store("podval_name") || "";
+  var savedOrg = store("podval_org") || "";
+  if (ORGS.indexOf(savedOrg) >= 0) state.org = savedOrg;
+  else if (savedOrg) { state.org = "__other"; $("orgOther").value = savedOrg; }
+  paint();
+
+  function showError(msg) { var e = $("error"); e.textContent = msg; e.classList.remove("hidden"); }
+
+  $("form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    $("error").classList.add("hidden");
+    var name = $("name").value.trim().replace(/\s+/g, " ");
+    var org = state.org === "__other" ? $("orgOther").value.trim() : state.org;
+    var goal = state.goal === "Другое" ? $("goalOther").value.trim() : state.goal;
+    if (name.length < 2) { showError("Введите ФИО"); $("name").focus(); return; }
+    if (!org) { showError("Выберите организацию"); return; }
+    if (!goal) { showError(state.goal === "Другое" ? "Напишите цель посещения" : "Выберите цель"); return; }
+
+    var btn = $("submit"); btn.disabled = true; btn.firstChild.textContent = "Отправляем… ";
+    fetch(window.PODVAL_API + "?action=checkin", {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=UTF-8" },
+      body: JSON.stringify({ name: name, org: org, goal: goal, website: $("website").value })
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok || !res.d.ok) throw new Error((res.d && res.d.error) || "Не получилось отправить");
+        store("podval_name", name); store("podval_org", org);
+        var when = res.d.ts ? new Date(res.d.ts) : new Date();
+        $("dName").textContent = name; $("dOrg").textContent = org; $("dGoal").textContent = goal;
+        $("dTime").textContent = when.toLocaleString("ru-RU", Object.assign({ day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }, tz));
+        $("formScreen").classList.add("hidden"); $("doneScreen").classList.remove("hidden");
+        window.scrollTo(0, 0); $("doneTitle").focus();
+      })
+      .catch(function (err) { showError(err.message === "Failed to fetch" ? "Нет связи. Проверьте интернет и попробуйте ещё раз." : err.message); })
+      .then(function () { btn.disabled = false; btn.firstChild.textContent = "Я захожу "; });
+  });
+
+  $("again").addEventListener("click", function () {
+    $("name").value = ""; state.org = ""; state.goal = ""; $("orgOther").value = ""; $("goalOther").value = "";
+    paint(); $("doneScreen").classList.add("hidden"); $("formScreen").classList.remove("hidden"); $("name").focus();
+  });
+})();
+</script>
+</body>
+</html>
