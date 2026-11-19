@@ -7,10 +7,11 @@
 <title>Журнал подвала · панель</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Manrope:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<link rel="icon" href="icon.png">
 <script src="config.js"></script>
 <style>
-  :root { --bg:#F4F4F1; --ink:#121212; --muted:#5C5C57; --soft:#6B6B66; --line:#CFCFC8; --hair:#ECECE7; --card:#FFF; --accent:#2B50E6; --c2:#C2410C; --c3:#1F7A5C; --c4:#7A4FD1; --c5:#8A6D00; }
+  :root { --bg:#F5F3EF; --ink:#282E3C; --muted:#62656D; --soft:#62656D; --line:#D9D5CD; --hair:#E7E3DC; --card:#FFF; --accent:#D88644; --c2:#4F6D8F; --c3:#5E7D5A; --c4:#8C6A9E; --c5:#9A7B3C; }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
   .hidden { display: none !important; }
@@ -19,7 +20,8 @@
   /* вход */
   .login { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .login form { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 14px; }
-  .login h1 { margin: 0 0 6px; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; }
+  .login h1 { margin: 0 0 6px; font-family: Oswald, sans-serif; font-size: 40px; font-weight: 600; line-height: 1; text-transform: uppercase; }
+  .login img { height: 44px; width: auto; align-self: flex-start; }
   .field { height: 52px; border: 2px solid transparent; border-radius: 14px; background: var(--card); padding: 0 16px; font: inherit; font-size: 16px; width: 100%; outline: none; }
   .field:focus { border-color: var(--accent); }
   .btn-dark { height: 52px; border-radius: 14px; border: 0; background: var(--ink); color: #FFF; font-weight: 700; font-size: 16px; }
@@ -31,35 +33,34 @@
   .inner { max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
   .head { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
   .brand { display: flex; align-items: center; gap: 12px; }
-  .logo { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); display: flex; align-items: center; justify-content: center; }
-  .logo span { width: 10px; height: 10px; border-radius: 5px; background: var(--accent); }
-  .brand h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .logo { height: 40px; width: auto; display: block; }
+  .brand h1 { margin: 0; font-family: Oswald, sans-serif; font-size: 26px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; line-height: 1.05; }
   .brand small { display: block; font-size: 13px; color: var(--soft); }
   .tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   .search { height: 44px; width: 240px; max-width: 100%; border: 0; border-radius: 22px; background: var(--card); padding: 0 18px; font: inherit; font-size: 14px; }
   .pill-dark { height: 44px; padding: 0 18px; border-radius: 22px; border: 0; background: var(--ink); color: #FFF; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
   .pill-ghost { height: 44px; min-width: 44px; padding: 0 14px; border-radius: 22px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
   .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
-  .last { grid-column: span 2; min-width: 0; background: var(--ink); color: #FFF; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .last { grid-column: span 2; min-width: 0; background: var(--ink); color: #F5F3EF; border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 12px; }
   @media (max-width: 520px) { .last { grid-column: auto; } }
-  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B5B5AE; }
-  .ago { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--accent); white-space: nowrap; }
-  .last-name { font-size: 28px; font-weight: 800; line-height: 1.1; overflow-wrap: anywhere; }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #B9BCC4; }
+  .ago { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: var(--accent); color: var(--ink); white-space: nowrap; }
+  .last-name { font-family: Oswald, sans-serif; font-size: 34px; font-weight: 500; line-height: 1.05; overflow-wrap: anywhere; }
   .tags { display: flex; gap: 8px; flex-wrap: wrap; }
-  .tag { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 14px; background: #2A2A28; }
+  .tag { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 14px; background: #363D4D; }
   .kpi { background: var(--card); border-radius: 22px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
   .kpi span:first-child { font-size: 13px; font-weight: 600; color: var(--soft); }
-  .kpi strong { font-size: 44px; font-weight: 800; letter-spacing: -0.03em; }
+  .kpi strong { font-family: Oswald, sans-serif; font-size: 52px; font-weight: 500; line-height: 1; }
   .main { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
   .panel { background: var(--card); border-radius: 22px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
   .journal { flex: 999 1 560px; min-width: 0; }
   .side { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
-  .panel h2 { margin: 0; font-size: 18px; font-weight: 800; }
+  .panel h2 { margin: 0; font-family: Oswald, sans-serif; font-size: 20px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
   .side h2 { font-size: 16px; }
   .bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; }
   .filters { display: flex; flex-wrap: wrap; gap: 8px; }
   .seg { height: 36px; padding: 0 14px; border-radius: 18px; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 13px; font-weight: 600; }
-  .seg[aria-pressed=true] { background: var(--ink); border-color: var(--ink); color: #FFF; }
+  .seg[aria-pressed=true] { background: var(--ink); border-color: var(--ink); color: #F5F3EF; }
   select.seg { appearance: none; padding-right: 30px; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23121212' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center; }
   .scroll { overflow-x: auto; }
   table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 14px; }
@@ -73,7 +74,7 @@
   .chart { display: flex; align-items: flex-end; gap: 10px; height: 150px; }
   .col { flex: 1 1 0; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
   .col b { font-size: 12px; }
-  .col i { width: 100%; border-radius: 8px; background: #D9D9D2; min-height: 3px; display: block; }
+  .col i { width: 100%; border-radius: 8px; background: #DDD8CF; min-height: 3px; display: block; }
   .col i.today { background: var(--accent); }
   .col span { font-size: 12px; color: var(--soft); }
   .orow { display: flex; flex-direction: column; gap: 6px; }
@@ -102,6 +103,7 @@
 
 <div class="login" id="loginScreen">
   <form id="loginForm">
+    <img src="logo.png" alt="Логотип Московской школы 547">
     <h1>Журнал подвала</h1>
     <label for="pw" class="status">Пароль ответственного</label>
     <input id="pw" class="field" type="password" autocomplete="current-password" required>
@@ -115,8 +117,8 @@
 <div class="inner">
   <div class="head">
     <div class="brand">
-      <div class="logo"><span></span></div>
-      <div><h1>Журнал подвала</h1><small id="updated">Школа 547</small></div>
+      <img class="logo" src="logo.png" alt="Логотип Московской школы 547">
+      <div><h1>Журнал подвала</h1><small id="updated">Московская школа 547</small></div>
     </div>
     <div class="tools">
       <label for="q" class="hidden">Поиск по ФИО</label>
@@ -219,7 +221,7 @@
         if (r.status === 401) { var e = new Error("Неверный пароль"); e.auth = true; throw e; }
         if (!r.ok || !d.ok) throw new Error(d.error || "Ошибка загрузки");
         visits = d.visits.map(function (v) { v.date = new Date(v.ts); return v; });
-        $("updated").textContent = "Школа 547 · обновлено в " + fmtTime(new Date());
+        $("updated").textContent = "Московская школа 547 · обновлено в " + fmtTime(new Date());
         render();
       });
     });
@@ -261,7 +263,7 @@
       var tr = el("tr");
       tr.appendChild(el("td", "t", when(v.date)));
       tr.appendChild(el("td", "n", v.name));
-      var td = el("td"), b = el("span", "org", v.org); b.style.background = orgColor(v.org); td.appendChild(b); tr.appendChild(td);
+      var td = el("td"), b = el("span", "org", v.org); b.style.background = orgColor(v.org); if (KNOWN.indexOf(v.org) === 0) b.style.color = "var(--ink)"; td.appendChild(b); tr.appendChild(td);
       tr.appendChild(el("td", "g", v.goal));
       body.appendChild(tr);
     });

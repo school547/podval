@@ -3,66 +3,70 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#F4F4F1">
+<meta name="theme-color" content="#F5F3EF">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <meta name="robots" content="noindex">
-<title>Вход в подвал · Школа 547</title>
+<title>Вход в подвал · Московская школа 547</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap&subset=cyrillic" rel="stylesheet">
 <script src="config.js"></script>
 <style>
-  :root { --bg:#F4F4F1; --ink:#121212; --muted:#5C5C57; --soft:#6B6B66; --line:#CFCFC8; --card:#FFFFFF; --accent:#2B50E6; --err:#C0262D; }
+  :root { --bg:#F5F3EF; --ink:#282E3C; --muted:#62656D; --line:#D9D5CD; --card:#FFFFFF; --accent:#D88644; --err:#B42318; }
   * { box-sizing: border-box; }
   html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: Manrope, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
-  .wrap { max-width: 480px; margin: 0 auto; min-height: 100dvh; padding: calc(24px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 22px; }
-  .top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: var(--muted); }
-  .place { display: flex; align-items: center; gap: 8px; }
-  .dot { width: 8px; height: 8px; border-radius: 4px; background: var(--accent); }
-  h1 { margin: 0; font-size: 34px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
-  .group { display: flex; flex-direction: column; gap: 8px; border: 0; padding: 0; margin: 0; min-width: 0; }
-  .label { font-size: 13px; font-weight: 600; color: var(--muted); padding: 0; }
-  .hint { font-size: 12px; color: var(--soft); }
-  input[type=text] { height: 52px; border: 2px solid transparent; border-radius: 14px; background: var(--card); padding: 0 16px; font: inherit; font-size: 16px; font-weight: 600; color: var(--ink); width: 100%; outline: none; }
-  input[type=text]:focus { border-color: var(--accent); }
+  .display { font-family: Oswald, "Arial Narrow", sans-serif; }
+  .wrap { max-width: 480px; margin: 0 auto; min-height: 100dvh; padding: calc(24px + env(safe-area-inset-top)) 22px calc(24px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 26px; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .place { display: flex; align-items: center; gap: 10px; font-family: Oswald, sans-serif; font-size: 15px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+  .place img { height: 28px; width: auto; display: block; }
+  #clock { font-size: 13px; font-weight: 600; color: var(--muted); }
+  h1 { margin: 0; font-family: Oswald, "Arial Narrow", sans-serif; font-size: 54px; font-weight: 600; line-height: .95; letter-spacing: .01em; text-transform: uppercase; }
+  .lead { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); margin-top: 10px; }
+  .lead::before { content: ""; width: 24px; height: 2px; background: var(--accent); flex-shrink: 0; }
+  .group { display: flex; flex-direction: column; gap: 10px; border: 0; padding: 0; margin: 0; min-width: 0; }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 0; }
+  .hint { font-size: 12px; color: var(--muted); }
+  input[type=text] { height: 46px; border: 0; border-bottom: 2px solid var(--ink); border-radius: 0; background: transparent; padding: 0; font: inherit; font-size: 19px; font-weight: 600; color: var(--ink); width: 100%; outline: none; }
+  input[type=text]::placeholder { color: #A9A59D; font-weight: 500; }
+  input[type=text]:focus { border-bottom-color: var(--accent); }
   .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .tile { height: 64px; border-radius: 14px; border: 0; background: var(--card); color: var(--ink); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; padding: 0 6px; transition: background .15s, color .15s, transform .1s; }
-  .tile[aria-pressed=true] { background: var(--accent); color: #FFF; }
-  .other { height: 44px; border-radius: 14px; background: transparent; color: var(--muted); border: 1px dashed var(--line); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
-  .other[aria-pressed=true] { background: var(--accent); color: #FFF; border: 1px solid var(--accent); }
+  .tile { height: 60px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font-family: Oswald, sans-serif; font-size: 17px; font-weight: 500; letter-spacing: .03em; cursor: pointer; padding: 0 6px; transition: background .15s, border-color .15s; }
+  .tile[aria-pressed=true] { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+  .other { height: 42px; border-radius: 12px; background: transparent; color: var(--muted); border: 1px dashed var(--line); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .other[aria-pressed=true] { background: var(--accent); color: var(--ink); border: 1px solid var(--accent); }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { min-height: 44px; padding: 0 16px; border-radius: 22px; background: transparent; color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; }
-  .chip[aria-pressed=true] { background: var(--ink); color: #FFF; border-color: var(--ink); }
+  .chip { min-height: 42px; padding: 0 16px; border-radius: 21px; background: transparent; color: var(--ink); border: 1px solid var(--line); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; }
+  .chip[aria-pressed=true] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
   button:active { transform: scale(0.98); }
-  button:focus-visible, .go:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  button:focus-visible, .go:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
   .hidden { display: none !important; }
   .spacer { flex-grow: 1; }
-  .go { height: 58px; border-radius: 16px; background: var(--ink); color: #FFF; border: 0; font: inherit; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; width: 100%; }
+  .go { height: 60px; border-radius: 14px; background: var(--ink); color: var(--bg); border: 0; font-family: Oswald, sans-serif; font-size: 20px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; cursor: pointer; width: 100%; }
   .go[disabled] { opacity: .55; cursor: default; }
-  .legal { font-size: 11px; color: var(--soft); text-align: center; line-height: 1.4; margin: 0; }
-  .error { background: #FDECEC; color: var(--err); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-weight: 600; }
+  .legal { font-size: 11px; color: var(--muted); text-align: center; line-height: 1.4; margin: 0; }
+  .error { background: #FBEAE5; color: var(--err); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-weight: 600; }
   .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  /* экран «Вы отмечены» */
   .done-main { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
-  .check { width: 88px; height: 88px; border-radius: 44px; background: var(--accent); display: flex; align-items: center; justify-content: center; animation: pop .45s cubic-bezier(.2,1.4,.4,1); }
+  .check { width: 84px; height: 84px; border-radius: 42px; border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; animation: pop .45s cubic-bezier(.2,1.4,.4,1); }
   @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .done-title { margin: 0; font-size: 38px; }
-  .sub { margin: 6px 0 0; font-size: 16px; color: var(--muted); }
-  .card { background: var(--card); border-radius: 20px; padding: 6px 20px; }
-  .row { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid #ECECE7; font-size: 15px; }
+  .card { border-top: 2px solid var(--ink); }
+  .row { display: flex; justify-content: space-between; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
   .row:last-child { border-bottom: 0; }
-  .row span:first-child { color: var(--soft); flex-shrink: 0; }
+  .row span:first-child { color: var(--muted); flex-shrink: 0; }
   .row span:last-child { font-weight: 700; text-align: right; overflow-wrap: anywhere; }
-  .again { height: 52px; border-radius: 16px; border: 1px solid var(--line); background: transparent; font: inherit; font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; width: 100%; }
+  .again { height: 52px; border-radius: 14px; border: 1px solid var(--line); background: transparent; font: inherit; font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; width: 100%; }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
 <main class="wrap" id="formScreen">
   <div class="top">
-    <div class="place"><span class="dot"></span>Подвал · Школа 547</div>
+    <div class="place"><img src="logo.png" alt="Логотип Московской школы 547">Школа 547</div>
     <div id="clock" aria-hidden="true"></div>
   </div>
-  <h1>Отметьтесь<br>перед входом</h1>
+  <div><h1>Вход<br>в подвал</h1><div class="lead">Отметьтесь перед входом</div></div>
 
   <form id="form" novalidate style="display:contents">
     <div class="group">
@@ -97,12 +101,12 @@
 </main>
 
 <main class="wrap hidden" id="doneScreen">
-  <div class="top"><div class="place"><span class="dot"></span>Подвал · Школа 547</div></div>
+  <div class="top"><div class="place"><img src="logo.png" alt="Логотип Московской школы 547">Школа 547</div></div>
   <div class="done-main">
-    <div class="check"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#FFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <div class="check"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#D88644" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
     <div>
-      <h1 class="done-title" tabindex="-1" id="doneTitle">Вы отмечены</h1>
-      <p class="sub">Вход записан в журнал. Хорошей работы!</p>
+      <h1 tabindex="-1" id="doneTitle">Вы<br>отмечены</h1>
+      <div class="lead">Вход записан в журнал. Хорошей работы!</div>
     </div>
     <div class="card">
       <div class="row"><span>Кто</span><span id="dName"></span></div>
